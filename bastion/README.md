@@ -1,7 +1,4 @@
-Here’s the `README.md` for the Azure Bastion module:
-
-### Azure Bastion Module `README.md`
-
+### Azure Bastion Module 
 ```markdown
 # Azure Bastion Module
 

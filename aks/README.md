@@ -1,6 +1,4 @@
-Here’s the `README.md` for the Azure Kubernetes Service (AKS) module:
-
-### Azure Kubernetes Service (AKS) Module `README.md`
+### Azure Kubernetes Service (AKS) Module 
 
 ```markdown
 # Azure Kubernetes Service (AKS) Module

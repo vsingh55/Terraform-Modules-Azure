@@ -1,6 +1,4 @@
-Here’s the `README.md` for the Compute module based on the provided code:
-
-### Compute Module `README.md`
+### Compute Module 
 
 ```markdown
 # Compute Module

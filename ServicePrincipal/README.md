@@ -1,6 +1,4 @@
-Here’s the `README.md` for the Azure AD Service Principal module:
-
-### Service Principal Module `README.md`
+### Service Principal Module
 
 ```markdown
 # Service Principal Module
