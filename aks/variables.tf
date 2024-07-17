@@ -7,10 +7,7 @@ variable "env" {
   type        = string
 }
 
-# variable "spn" {
-#   description = "It is prefix of spn_name(service principal name)"
-#   type        = string
-# }
+
 variable "aks_location" {
   type = string
 }

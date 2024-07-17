@@ -17,67 +17,144 @@ Modularized Terraform code refers to the practice of breaking down your infrastr
 
 Modules are defined in their own directories, with their own `main.tf`, `variables.tf`, and `outputs.tf` files. To use a module, you reference it in your Terraform configuration with the `source` argument pointing to the module’s path.
 
-#### **_Example:_** Let's use resource group module into your infrastructure code.
-
-Here's the updated section for the `README.md` with more detailed instructions about using the modules and handling variables:
-
 ---
 
-## **How to Use**
+## How to Use
 
 ### **Accessing Modules**
 
-To use any of the modules in this repository, you can refer to them directly in your Terraform configuration by specifying the source. Here’s an example of how to use the `resourcegroup` module:
+To use any of the modules in this repository, you can refer to them directly in your terraform **main.tf** by specifying the source. Here’s an example of how to use the `resourcegroup` module.
 
-```hcl
-module "resource_group" {
-  source = "github.com/vsingh55/Terraform-Modules-Azure//resourcegroup"
+#### **Defining and Initializing Variables Method**
 
-  project  = var.project
-  env      = var.env
-  location = var.location
-}
-```
+Each module has its own `variables.tf` file which defines the required variables. Here’s how you can define and provide values for these variables:
 
-### Variables
+#### Option 1: Providing Values Directly in `main.tf`
 
-Each module has its own `variables.tf` file where you can find the variables that need to be initialized. You can define these variables in your `.auto.tfvars` file or directly in your Terraform configuration. Here’s an example `.auto.tfvars` file for the `resourcegroup` module:
+1. **Referencing Variables in Your `main.tf` File:**
+   Define the variable values directly within the module block in your `main.tf` file.
 
-```hcl
-project  = "myproject"
-env      = "dev"
-location = "East US"
-```
+   Example:
 
-> #### Important Note on Variables
+   ```hcl
+   module "resource_group" {
+     source  = "github.com/vsingh55/Terraform-Modules-Azure//resourcegroup"
+     project  = "myproject"
+     env      = "dev"
+     location = "East US"
+   }
+   ```
 
-If you use a `.auto.tfvars` file, you do not need to define the same variables in your Terraform configuration. The variables defined in the `.auto.tfvars` file are automatically loaded by Terraform. This helps keep your Terraform configuration files clean and more manageable. Here’s an example of how this works:
+   In this case, you don’t need a `variable.tf`, `variables.auto.tfvars` file since you are providing the values directly in the `main.tf` file.
 
-1. Define your variables in a `.auto.tfvars` file:
+   > **Use Case:**
+This method is more feasible for modules with fewer variables or for quick and simple configurations where you prefer to define all parameters directly in the main.tf file for clarity.
 
-    ```hcl
-    # variables.auto.tfvars
-    project  = "myproject"
-    env      = "dev"
-    location = "East US"
-    ```
+#### Option 2: Using `variables.tf` File
 
-2. Reference the module in your Terraform configuration without redefining the variables:
+1. **Create a `variables.tf` File:**
+   Copy all the defined variables from the module's variable.tf file to your own variables.tf file of project directory.
 
-    ```hcl
-    module "resource_group" {
-      source = "github.com/vsingh55/Terraform-Modules-Azure//resourcegroup"
+   Provide the values within variables definion.
+
+   Example `variables.tf` file:
+
+   ```hcl
+    variable "project" {
+    type = string
+    default = "myproject"   
     }
-    ```
 
-Terraform will automatically use the values from the `.auto.tfvars` file when running `terraform plan` and `terraform apply`.
+    variable "env" {
+    type = string
+    default = "dev"
+    }
 
-By using `.auto.tfvars` files, you ensure that your Terraform configuration files remain uncluttered and that the variable values are managed in a consistent manner across your projects.
+    variable "location" {
+    description = "The location of the resource group"
+    type        = string
+    default     = "East US"
+    }
 
----
+   ```
 
-This approach clarifies that users do not need to redefine variables in their Terraform configuration if they use `.auto.tfvars` files, and explains how this mechanism works.
+   Terraform automatically loads variables from `variables.tf` files, so you don’t need to define these variables again in your `variables.auto.tf` and `main.tf` file.
 
+2. **Reference Variables in `main.tf`:**
+   Reference the variables in your module block without needing to provide their values directly.
+
+   Example:
+
+   ```hcl
+   module "resource_group" {
+     source = "github.com/vsingh55/Terraform-Modules-Azure//resourcegroup"
+
+     project  = var.project
+     env      = var.env
+     location = var.location
+   }
+   ```
+> **Use Case:**
+This method is suitable when you have a standard set of variables that you want to use across multiple modules or when you prefer to separate variable definitions from your main configuration for better organization and maintainability.
+
+
+#### Option 3: Using `variables.auto.tfvars` File
+
+1. **Reference Variables in `main.tf`:**
+   Reference the variables in your module block without needing to provide their values directly.
+
+   Example:
+
+   ```hcl
+   module "resource_group" {
+     source = "github.com/vsingh55/Terraform-Modules-Azure//resourcegroup"
+
+     project  = var.project
+     env      = var.env
+     location = var.location
+   }
+
+**Create a `variables.tf` File:**
+   Copy all the defined variables from the module's variable.tf file to your own variables.tf file of project directory.
+
+   Provide the values within variables definion.
+
+   Example `variables.tf` file:
+
+   ```hcl
+    variable "project" {
+    type = string
+    default = "myproject"   
+    }
+
+    variable "env" {
+    type = string
+    default = "dev"
+    }
+
+    variable "location" {
+    description = "The location of the resource group"
+    type        = string
+    default     = "East US"
+    }
+
+   ```
+
+3. **Create a `variables.auto.tfvars` File:**
+   Define the values for the variables in a `.auto.tfvars` file in your project directory.
+
+   Example `.auto.tfvars` file:
+
+   ```hcl
+   project  = "myproject"
+   env      = "dev"
+   location = "East US"
+   ```
+
+   Terraform automatically loads variables value from `variables.auto.tfvars` file.
+
+> **Use Case:**
+This method is ideal for managing configurations across different environments (e.g., dev, staging, prod). It allows you to keep your main configuration consistent while only changing the .auto.tfvars file for different environments, providing better flexibility and ease of management.
 
 ## Purpose
 
@@ -130,7 +207,15 @@ Each module comes with a `README.md` file that includes:
 - **Inputs:** The variables required by the module.
 - **Outputs:** The outputs provided by the module.
 
+---
+## References:
+For more clarity go and checkout [Repo](https://github.com/vsingh55/Automated-AKS-Cluster-Provisioning-Using-Terraform-and-Service-Principal.git) it's perfect starting point you can start learning modularized terraform code.
 
+#### Blog 🖥️
+
+Check out the Blog for deep understanding of modularized terraform. [click here]()
+
+---
 ## Contributing
 
 We welcome contributions! Please see our [CONTRIBUTING.md](./CONTRIBUTING.md) for guidelines on how to contribute.
