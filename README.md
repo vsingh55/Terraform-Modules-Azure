@@ -213,7 +213,7 @@ For more clarity go and checkout [Repo](https://github.com/vsingh55/Automated-AK
 
 #### Blog 🖥️
 
-Check out the Blog for deep understanding of modularized terraform. [click here]()
+Check out the Blog for deep understanding of modularized terraform. [click here](https://blogs.vijaysingh.cloud/modular-terraform-a-guide-to-efficient-infrastructure-as-code)
 
 ---
 ## Contributing
